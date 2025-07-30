@@ -72,126 +72,179 @@
       border-radius: 0.5rem;
       border-left: 4px solid #38bdf8;
     }
-    .descricao-final {
-      margin-top: 2rem;
-      padding: 1rem;
-      background-color: #1e293b;
-      border-left: 4px solid #10b981;
-      border-radius: 0.5rem;
-    }
-    .descricao-final label {
-      font-size: 1rem;
-      color: #a5f3fc;
-    }
-    /* PDF-style preview */
-    .pdf-preview {
-      margin-top: 3rem;
-      background: white;
-      color: black;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-    .pdf-header {
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-    .pdf-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    .pdf-table th, .pdf-table td {
-      border: 1px solid black;
-      padding: 0.5rem;
-      text-align: left;
-    }
-    .pdf-descricao {
-      margin-top: 1.5rem;
-      font-size: 0.95rem;
-      border: 1px solid #ccc;
-      padding: 1rem;
-    }
   </style>
 </head>
 <body>
+  <h1>Orça Fácil</h1>
+  <div class="logo">Orçamento <span>rápido e profissional</span></div>
+
   <div class="container">
-    <h1>Orça Fácil</h1>
+    <label for="empresa">Nome da empresa:</label>
+    <input type="text" id="empresa" placeholder="Ex: Serralheria DG">
 
-    <!-- Campos do orçamento aqui -->
+    <label for="data">Data:</label>
+    <input type="date" id="data">
 
-    <!-- Descrição total do serviço -->
-    <div class="descricao-final">
-      <label for="descricaoTotal">Descrição Geral do Serviço:</label>
-      <textarea id="descricaoTotal" rows="4" placeholder="Ex: Instalação de piso em todo o salão com rodapé. Pintura completa das paredes com tinta acrílica branca."></textarea>
-    </div>
+    <label for="cliente">Nome do cliente:</label>
+    <input type="text" id="cliente" placeholder="Ex: João Silva">
 
-    <!-- Botão para gerar PDF ou continuar -->
+    <label for="telefone">Telefone:</label>
+    <input type="text" id="telefone" placeholder="Ex: (11) 99999-9999">
+
+    <label for="endereco">Endereço:</label>
+    <input type="text" id="endereco" placeholder="Rua, número, bairro, cidade">
+
+    <label for="servico">Serviço:</label>
+    <select id="servico">
+      <option value="">Selecione</option>
+      <option value="metro">Drywall</option>
+      <option value="metro">Piso</option>
+      <option value="metro">Telhado</option>
+      <option value="metro">Pintura</option>
+      <option value="fixo">Portão</option>
+      <option value="metro">Muro</option>
+      <option value="fixo">Torneira</option>
+      <option value="metro">Calha</option>
+      <option value="fixo">Escada</option>
+      <option value="metro">Laje</option>
+      <option value="fixo">Outros</option>
+    </select>
+
+    <label for="descricao">Descrição do serviço:</label>
+    <textarea id="descricao" rows="3" placeholder="Ex: Instalação de piso porcelanato na cozinha"></textarea>
+
+    <label for="valor">Valor total mão de obra:</label>
+    <input type="number" id="valor" placeholder="Ex: 600">
+
+    <label for="pagamentoMaoObra">Pagamento mão de obra:</label>
+    <select id="pagamentoMaoObra">
+      <option value="à vista">À vista</option>
+      <option value="parcelado">Parcelado</option>
+      <option value="cartão">Cartão</option>
+    </select>
+
+    <label for="material">Valor total material:</label>
+    <input type="number" id="material" placeholder="Ex: 300">
+
+    <label for="pagamentoMaterial">Pagamento material:</label>
+    <select id="pagamentoMaterial">
+      <option value="à vista">À vista</option>
+      <option value="parcelado">Parcelado</option>
+      <option value="cartão">Cartão</option>
+    </select>
+
+    <label for="tempo">Tempo de execução:</label>
+    <input type="text" id="tempo" placeholder="Ex: 3 dias">
+
+    <label for="desconto">Desconto (%):</label>
+    <input type="number" id="desconto" placeholder="Ex: 5">
+
+    <button onclick="adicionarServico()">Adicionar Serviço</button>
     <button onclick="gerarPDF()">Gerar PDF</button>
 
-    <!-- Prévia estilo PDF -->
-    <div class="pdf-preview">
-      <div class="pdf-header">
-        NOME DA SUA EMPRESA<br>
-        Informações da sua empresa NESSE ESPAÇO
-      </div>
-
-      <table>
-        <tr>
-          <td><strong>Pedido:</strong> ___</td>
-          <td><strong>Data:</strong> ___</td>
-        </tr>
-        <tr>
-          <td><strong>Cliente:</strong> ___</td>
-          <td><strong>Endereço:</strong> ___</td>
-        </tr>
-        <tr>
-          <td><strong>Cidade:</strong> ___</td>
-          <td><strong>UF:</strong> ___</td>
-        </tr>
-        <tr>
-          <td><strong>CEP:</strong> ___</td>
-          <td><strong>Fone:</strong> ___</td>
-        </tr>
-        <tr>
-          <td><strong>CNPJ:</strong> ___</td>
-          <td><strong>Inscr. Est.:</strong> ___</td>
-        </tr>
-      </table>
-
-      <table class="pdf-table">
-        <thead>
-          <tr>
-            <th>QUANT</th>
-            <th>DESCRIÇÃO</th>
-            <th>UNIT.</th>
-            <th>TOTAL</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Pintura de sala com tinta branca</td>
-            <td>R$ 200,00</td>
-            <td>R$ 200,00</td>
-          </tr>
-          <!-- mais linhas aqui -->
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3"><strong>TOTAL</strong></td>
-            <td><strong>R$ 200,00</strong></td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <div class="pdf-descricao">
-        <strong>Descrição do Serviço:</strong><br>
-        Instalação de piso laminado com acabamento em rodapé branco, pintura de duas paredes, limpeza final incluída.
-      </div>
-    </div>
+    <div id="resumo"></div>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const servicos = [];
+
+    function adicionarServico() {
+      const nome = document.getElementById('servico').selectedOptions[0].text;
+      const descricao = document.getElementById('descricao').value;
+      const maoDeObra = parseFloat(document.getElementById('valor').value) || 0;
+      const material = parseFloat(document.getElementById('material').value) || 0;
+      const pagamentoMaoObra = document.getElementById('pagamentoMaoObra').value;
+      const pagamentoMaterial = document.getElementById('pagamentoMaterial').value;
+      const tempo = document.getElementById('tempo').value;
+      const desconto = parseFloat(document.getElementById('desconto').value) || 0;
+
+      const total = maoDeObra + material;
+      const valorFinal = total - (total * desconto / 100);
+
+      const item = {
+        nome, descricao, maoDeObra, pagamentoMaoObra,
+        material, pagamentoMaterial, tempo,
+        desconto, total, valorFinal
+      };
+
+      servicos.push(item);
+      atualizarResumo();
+    }
+
+    function atualizarResumo() {
+      const container = document.getElementById('resumo');
+      container.innerHTML = '';
+      let totalFinal = 0;
+      servicos.forEach((s) => {
+        totalFinal += s.valorFinal;
+        const div = document.createElement('div');
+        div.className = 'orcamento-item';
+        div.innerHTML = `
+          <p><strong>Serviço:</strong> ${s.nome}</p>
+          <p><strong>Descrição:</strong> ${s.descricao}</p>
+          <p><strong>Mão de Obra:</strong> R$ ${s.maoDeObra.toFixed(2)} (${s.pagamentoMaoObra})</p>
+          <p><strong>Material:</strong> R$ ${s.material.toFixed(2)} (${s.pagamentoMaterial})</p>
+          <p><strong>Total:</strong> R$ ${s.total.toFixed(2)}</p>
+          ${s.desconto > 0 ? `<p><strong>Desconto:</strong> ${s.desconto}%</p>` : ''}
+          <p><strong>Valor Final:</strong> R$ ${s.valorFinal.toFixed(2)}</p>
+          <p><strong>Tempo de execução:</strong> ${s.tempo}</p>
+        `;
+        container.appendChild(div);
+      });
+
+      const resumoFinal = document.createElement('div');
+      resumoFinal.className = 'resumo-total';
+      resumoFinal.innerHTML = `
+        <h3>Total Geral do Orçamento</h3>
+        <p><strong>Total:</strong> R$ ${totalFinal.toFixed(2)}</p>
+      `;
+      container.appendChild(resumoFinal);
+    }
+
+    function gerarPDF() {
+      const empresa = document.getElementById('empresa').value;
+      const cliente = document.getElementById('cliente').value;
+      const telefone = document.getElementById('telefone').value;
+      const endereco = document.getElementById('endereco').value;
+      const data = document.getElementById('data').value;
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+
+      doc.setFontSize(14);
+      doc.text(empresa || 'Orçamento', 10, y);
+      y += 8;
+
+      doc.setFontSize(11);
+      doc.text(`Cliente: ${cliente}`, 10, y); y += 6;
+      doc.text(`Telefone: ${telefone}`, 10, y); y += 6;
+      doc.text(`Endereço: ${endereco}`, 10, y); y += 6;
+      doc.text(`Data: ${data}`, 10, y); y += 10;
+
+      let totalFinal = 0;
+      servicos.forEach((s) => {
+        totalFinal += s.valorFinal;
+        doc.text(`Serviço: ${s.nome}`, 10, y); y += 6;
+        doc.text(`Descrição: ${s.descricao}`, 10, y); y += 6;
+        doc.text(`Mão de Obra: R$ ${s.maoDeObra.toFixed(2)} (${s.pagamentoMaoObra})`, 10, y); y += 6;
+        doc.text(`Material: R$ ${s.material.toFixed(2)} (${s.pagamentoMaterial})`, 10, y); y += 6;
+        doc.text(`Total: R$ ${s.total.toFixed(2)}`, 10, y); y += 6;
+        if (s.desconto > 0) { doc.text(`Desconto: ${s.desconto}%`, 10, y); y += 6; }
+        doc.text(`Valor Final: R$ ${s.valorFinal.toFixed(2)}`, 10, y); y += 6;
+        doc.text(`Tempo: ${s.tempo}`, 10, y); y += 10;
+        if (y > 270) { doc.addPage(); y = 10; }
+      });
+
+      doc.setFontSize(12);
+      doc.text("Resumo Final do Orçamento", 10, y); y += 6;
+      doc.setFontSize(11);
+      doc.text(`Total dos serviços com desconto: R$ ${totalFinal.toFixed(2)}`, 10, y);
+
+      const nomeArquivo = cliente ? `orcamento_${cliente.replace(/\s+/g, '_').toLowerCase()}.pdf` : 'orcamento.pdf';
+      doc.save(nomeArquivo);
+    }
+  </script>
 </body>
 </html>
