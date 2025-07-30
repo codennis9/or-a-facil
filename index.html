@@ -95,7 +95,7 @@
     <input type="text" id="endereco" placeholder="Rua, número, bairro, cidade">
 
     <label for="servico">Serviço:</label>
-      <select id="servico">
+    <select id="servico">
       <option value="">Selecione</option>
       <option value="metro">Drywall</option>
       <option value="metro">Piso</option>
@@ -113,16 +113,25 @@
     <label for="descricao">Descrição do serviço:</label>
     <textarea id="descricao" rows="3" placeholder="Ex: Instalação de piso porcelanato na cozinha"></textarea>
 
-    <div id="campoMetros">
-      <label for="metros">Quantidade (metros):</label>
-      <input type="number" id="metros" placeholder="Ex: 23">
-    </div>
+    <label for="valor">Valor total mão de obra:</label>
+    <input type="number" id="valor" placeholder="Ex: 600">
 
-    <label for="valor">Valor mão de obra (por metro ou total):</label>
-    <input type="number" id="valor" placeholder="Ex: 35">
+    <label for="pagamentoMaoObra">Pagamento mão de obra:</label>
+    <select id="pagamentoMaoObra">
+      <option value="à vista">À vista</option>
+      <option value="parcelado">Parcelado</option>
+      <option value="cartão">Cartão</option>
+    </select>
 
-    <label for="material">Valor do material:</label>
-    <input type="number" id="material" placeholder="Ex: 200">
+    <label for="material">Valor total material:</label>
+    <input type="number" id="material" placeholder="Ex: 300">
+
+    <label for="pagamentoMaterial">Pagamento material:</label>
+    <select id="pagamentoMaterial">
+      <option value="à vista">À vista</option>
+      <option value="parcelado">Parcelado</option>
+      <option value="cartão">Cartão</option>
+    </select>
 
     <label for="tempo">Tempo de execução:</label>
     <input type="text" id="tempo" placeholder="Ex: 3 dias">
@@ -140,36 +149,25 @@
   <script>
     const servicos = [];
 
-    document.getElementById('servico').addEventListener('change', function () {
-      const tipo = this.value;
-      document.getElementById('campoMetros').style.display = tipo === 'metro' ? 'block' : 'none';
-    });
-
     function adicionarServico() {
-      const servico = document.getElementById('servico');
-      const tipo = servico.value;
-      const nome = servico.options[servico.selectedIndex].text;
+      const nome = document.getElementById('servico').selectedOptions[0].text;
       const descricao = document.getElementById('descricao').value;
-      const metros = parseFloat(document.getElementById('metros').value) || 0;
-      const valor = parseFloat(document.getElementById('valor').value);
+      const maoDeObra = parseFloat(document.getElementById('valor').value) || 0;
       const material = parseFloat(document.getElementById('material').value) || 0;
+      const pagamentoMaoObra = document.getElementById('pagamentoMaoObra').value;
+      const pagamentoMaterial = document.getElementById('pagamentoMaterial').value;
       const tempo = document.getElementById('tempo').value;
       const desconto = parseFloat(document.getElementById('desconto').value) || 0;
 
-      let maoDeObra = tipo === 'metro' ? metros * valor : valor;
-      let total = maoDeObra + material;
-      let valorFinal = total - (total * desconto / 100);
+      const total = maoDeObra + material;
+      const valorFinal = total - (total * desconto / 100);
 
       const item = {
-        nome,
-        descricao,
-        maoDeObra,
-        material,
-        total,
-        desconto,
-        valorFinal,
-        tempo
+        nome, descricao, maoDeObra, pagamentoMaoObra,
+        material, pagamentoMaterial, tempo,
+        desconto, total, valorFinal
       };
+
       servicos.push(item);
       atualizarResumo();
     }
@@ -185,20 +183,20 @@
         div.innerHTML = `
           <p><strong>Serviço:</strong> ${s.nome}</p>
           <p><strong>Descrição:</strong> ${s.descricao}</p>
-          <p><strong>Mão de Obra:</strong> R$ ${s.maoDeObra.toFixed(2)}</p>
-          <p><strong>Material:</strong> R$ ${s.material.toFixed(2)}</p>
+          <p><strong>Mão de Obra:</strong> R$ ${s.maoDeObra.toFixed(2)} (${s.pagamentoMaoObra})</p>
+          <p><strong>Material:</strong> R$ ${s.material.toFixed(2)} (${s.pagamentoMaterial})</p>
           <p><strong>Total:</strong> R$ ${s.total.toFixed(2)}</p>
-          <p><strong>Desconto:</strong> ${s.desconto}%</p>
+          ${s.desconto > 0 ? `<p><strong>Desconto:</strong> ${s.desconto}%</p>` : ''}
           <p><strong>Valor Final:</strong> R$ ${s.valorFinal.toFixed(2)}</p>
           <p><strong>Tempo de execução:</strong> ${s.tempo}</p>
         `;
         container.appendChild(div);
       });
+
       const resumoFinal = document.createElement('div');
       resumoFinal.className = 'resumo-total';
       resumoFinal.innerHTML = `
         <h3>Total Geral do Orçamento</h3>
-        <p>Este valor considera todos os serviços adicionados, com descontos aplicados.</p>
         <p><strong>Total:</strong> R$ ${totalFinal.toFixed(2)}</p>
       `;
       container.appendChild(resumoFinal);
@@ -226,24 +224,23 @@
       doc.text(`Data: ${data}`, 10, y); y += 10;
 
       let totalFinal = 0;
-      servicos.forEach((s, i) => {
+      servicos.forEach((s) => {
         totalFinal += s.valorFinal;
         doc.text(`Serviço: ${s.nome}`, 10, y); y += 6;
         doc.text(`Descrição: ${s.descricao}`, 10, y); y += 6;
-        doc.text(`Mão de Obra: R$ ${s.maoDeObra.toFixed(2)}`, 10, y); y += 6;
-        doc.text(`Material: R$ ${s.material.toFixed(2)}`, 10, y); y += 6;
+        doc.text(`Mão de Obra: R$ ${s.maoDeObra.toFixed(2)} (${s.pagamentoMaoObra})`, 10, y); y += 6;
+        doc.text(`Material: R$ ${s.material.toFixed(2)} (${s.pagamentoMaterial})`, 10, y); y += 6;
         doc.text(`Total: R$ ${s.total.toFixed(2)}`, 10, y); y += 6;
-        doc.text(`Desconto: ${s.desconto}%`, 10, y); y += 6;
+        if (s.desconto > 0) { doc.text(`Desconto: ${s.desconto}%`, 10, y); y += 6; }
         doc.text(`Valor Final: R$ ${s.valorFinal.toFixed(2)}`, 10, y); y += 6;
-        doc.text(`Tempo de execução: ${s.tempo}`, 10, y); y += 10;
+        doc.text(`Tempo: ${s.tempo}`, 10, y); y += 10;
         if (y > 270) { doc.addPage(); y = 10; }
       });
 
       doc.setFontSize(12);
       doc.text("Resumo Final do Orçamento", 10, y); y += 6;
       doc.setFontSize(11);
-      doc.text(`Total dos serviços com desconto: R$ ${totalFinal.toFixed(2)}`, 10, y); y += 6;
-      doc.text("Este valor representa o total acumulado dos serviços listados neste orçamento.", 10, y);
+      doc.text(`Total dos serviços com desconto: R$ ${totalFinal.toFixed(2)}`, 10, y);
 
       const nomeArquivo = cliente ? `orcamento_${cliente.replace(/\s+/g, '_').toLowerCase()}.pdf` : 'orcamento.pdf';
       doc.save(nomeArquivo);
